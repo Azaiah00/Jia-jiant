@@ -13,6 +13,11 @@
   NEXT_USE_NETLIFY_EDGE = "true"
   NEXT_PRIVATE_TARGET = "server"
 
+# Configure these in the Netlify dashboard
+[template.environment]
+  BREVO_API_KEY = "your_brevo_api_key"
+  BREVO_LIST_ID = "your_list_id"
+
 # Uncomment and update these in the Netlify dashboard
 # [template.environment]
 #   MAILCHIMP_API_KEY = "your_api_key"
