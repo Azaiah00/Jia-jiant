@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
+import { contactFormConfig } from './forms'
 
 export default function ContactForm() {
   const router = useRouter()
@@ -20,34 +21,29 @@ export default function ContactForm() {
     setIsSubmitting(true)
 
     try {
-      const formData = new FormData(e.currentTarget)
-      
+      const form = e.currentTarget
+      const data = new FormData(form)
+
       // Submit to Netlify Forms
-      await fetch('/', {
+      fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(Array.from(formData.entries()) as [string, string][]).toString(),
+        body: new URLSearchParams(Array.from(data.entries()) as [string, string][]).toString(),
+      }).catch(error => {
+        console.error('Netlify Forms error:', error)
       })
 
-      // Submit to our API route
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        body: formData,
+      // Clear form and redirect
+      setFormState({
+        name: '',
+        email: '',
+        subject: '',
+        message: '',
+        inquiryType: 'booking'
       })
-
-      if (response.ok) {
-        setFormState({
-          name: '',
-          email: '',
-          subject: '',
-          message: '',
-          inquiryType: 'booking'
-        })
-        router.push('/success')
-      } else {
-        throw new Error('Failed to submit form')
-      }
+      router.push('/success')
     } catch (error) {
+      console.error('Form submission error:', error)
       alert('Something went wrong. Please try again.')
     } finally {
       setIsSubmitting(false)
@@ -64,17 +60,24 @@ export default function ContactForm() {
   return (
     <>
       {/* Hidden form for Netlify Forms detection */}
-      <form name="contact" data-netlify="true" netlify-honeypot="bot-field" hidden>
-        <input type="text" name="name" />
-        <input type="email" name="email" />
-        <input type="text" name="subject" />
-        <textarea name="message"></textarea>
-        <select name="inquiryType">
-          <option value="booking">Booking Inquiry</option>
-          <option value="collaboration">Collaboration</option>
-          <option value="press">Press/Media</option>
-          <option value="other">Other</option>
-        </select>
+      <form
+        name={contactFormConfig.name}
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        hidden
+      >
+        {contactFormConfig.fields.map(field => {
+          if (field.type === 'select') {
+            return (
+              <select key={field.name} name={field.name}>
+                {field.options?.map(option => (
+                  <option key={option} value={option}>{option}</option>
+                ))}
+              </select>
+            )
+          }
+          return <input key={field.name} type={field.type} name={field.name} />
+        })}
       </form>
 
       {/* Actual form */}
@@ -83,13 +86,13 @@ export default function ContactForm() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className="space-y-6"
-        name="contact"
+        name={contactFormConfig.name}
         method="POST"
         data-netlify="true"
         netlify-honeypot="bot-field"
         onSubmit={handleSubmit}
       >
-        <input type="hidden" name="form-name" value="contact" />
+        <input type="hidden" name="form-name" value={contactFormConfig.name} />
         <div hidden>
           <label>
             Don't fill this out if you're human: <input name="bot-field" />
