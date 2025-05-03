@@ -9,8 +9,6 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-  [plugins.inputs]
-    staticPageWorkarounds = true
 
 [build.environment]
   NODE_VERSION = "18"
