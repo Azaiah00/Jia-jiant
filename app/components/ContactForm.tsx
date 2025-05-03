@@ -4,11 +4,12 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/navigation'
 import { contactFormConfig } from './forms'
+import { submitContactForm, type ContactFormData } from '../actions/contact'
 
 export default function ContactForm() {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [formState, setFormState] = useState({
+  const [formState, setFormState] = useState<ContactFormData>({
     name: '',
     email: '',
     subject: '',
@@ -21,27 +22,21 @@ export default function ContactForm() {
     setIsSubmitting(true)
 
     try {
-      const form = e.currentTarget
-      const data = new FormData(form)
-
-      // Submit to Netlify Forms
-      fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(Array.from(data.entries()) as [string, string][]).toString(),
-      }).catch(error => {
-        console.error('Netlify Forms error:', error)
-      })
-
-      // Clear form and redirect
-      setFormState({
-        name: '',
-        email: '',
-        subject: '',
-        message: '',
-        inquiryType: 'booking'
-      })
-      router.push('/success')
+      const result = await submitContactForm(formState)
+      
+      if (result.success) {
+        // Clear form and redirect
+        setFormState({
+          name: '',
+          email: '',
+          subject: '',
+          message: '',
+          inquiryType: 'booking'
+        })
+        router.push('/success')
+      } else {
+        throw new Error(result.error)
+      }
     } catch (error) {
       console.error('Form submission error:', error)
       alert('Something went wrong. Please try again.')
