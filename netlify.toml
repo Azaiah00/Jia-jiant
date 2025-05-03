@@ -5,18 +5,36 @@
 
 [functions]
   node_bundler = "esbuild"
+  included_files = ["netlify/functions/**"]
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+  [plugins.inputs]
+    staticPageWorkarounds = true
 
 [build.environment]
+  NODE_VERSION = "18"
+  NPM_VERSION = "9"
   NEXT_USE_NETLIFY_EDGE = "true"
   NEXT_PRIVATE_TARGET = "server"
+  NEXT_PUBLIC_SITE_URL = "https://jiathejiant.netlify.app"
+
+# Forms configuration
+[build.processing]
+  skip_processing = false
+
+[build.processing.html]
+  pretty_urls = true
 
 # Configure these in the Netlify dashboard
 [template.environment]
   BREVO_API_KEY = "your_brevo_api_key"
   BREVO_LIST_ID = "your_list_id"
+
+# Disable Go installation since we're not using it
+[build.environment.golang]
+  GO_IMPORT_PATH = ""
+  GO_VERSION = ""
 
 # Uncomment and update these in the Netlify dashboard
 # [template.environment]
