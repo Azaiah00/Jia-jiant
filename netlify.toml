@@ -1,0 +1,20 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[build.environment]
+  NEXT_USE_NETLIFY_EDGE = "true"
+  NEXT_PRIVATE_TARGET = "server"
+
+# Uncomment and update these in the Netlify dashboard
+# [template.environment]
+#   MAILCHIMP_API_KEY = "your_api_key"
+#   MAILCHIMP_SERVER_PREFIX = "your_server_prefix"
+#   MAILCHIMP_LIST_ID = "your_list_id" 
