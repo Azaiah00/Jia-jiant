@@ -16,6 +16,7 @@ const playfair = Playfair_Display({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://jiathejiant.com'),
   title: 'Jia The Jiant | Rapper, Model, Actor & Influencer',
   description: 'Official website of Jia The Jiant - Brooklyn & Richmond based rapper, model, actor, and social media influencer. Book now for performances, modeling, and collaborations.',
   keywords: 'Jia The Jiant, rapper, model, actor, influencer, Brooklyn, Richmond, BK 718, RVA 804, music',
