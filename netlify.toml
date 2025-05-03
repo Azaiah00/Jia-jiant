@@ -8,26 +8,3 @@
 [build.environment]
   NEXT_USE_NETLIFY_EDGE = "true"
   NODE_VERSION = "18"
-
-# Forms configuration
-[build.processing]
-  skip_processing = false
-
-[build.processing.html]
-  pretty_urls = true
-
-# Configure these in the Netlify dashboard
-[template.environment]
-  BREVO_API_KEY = "your_brevo_api_key"
-  BREVO_LIST_ID = "your_list_id"
-
-# Disable Go installation since we're not using it
-[build.environment.golang]
-  GO_IMPORT_PATH = ""
-  GO_VERSION = ""
-
-# Uncomment and update these in the Netlify dashboard
-# [template.environment]
-#   MAILCHIMP_API_KEY = "your_api_key"
-#   MAILCHIMP_SERVER_PREFIX = "your_server_prefix"
-#   MAILCHIMP_LIST_ID = "your_list_id" 
