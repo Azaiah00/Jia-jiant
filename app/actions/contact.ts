@@ -20,14 +20,21 @@ export async function submitContactForm(formData: ContactFormData) {
     // Create the form submission body
     const body = new URLSearchParams()
     body.append('form-name', 'contact')
+    
+    // Add honeypot field
+    body.append('bot-field', '')
+    
+    // Add form data
     Object.entries(validatedData).forEach(([key, value]) => {
       body.append(key, value)
     })
 
     // Submit to Netlify Forms
-    const response = await fetch('/', {
+    const response = await fetch('/.netlify/functions/submission-created', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      headers: { 
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
       body: body.toString(),
     })
 
